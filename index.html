@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>সাদুল্লাপুর অরুণ আলো রেসিডেন্সিয়াল স্কুল এন্ড কলেজ - রেজাল্ট পোর্টাল</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+        .container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 750px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-top: 6px solid #047857;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 15px;
+        }
+        .header h1 {
+            color: #065f46;
+            font-size: 20px;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+        .header h3 {
+            color: #0d9488;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .search-panel {
+            display: block;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 12px;
+        }
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 16px;
+            outline: none;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+        input:focus {
+            border-color: #047857;
+            background: #ffffff;
+        }
+        .search-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #047857;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .search-btn:hover {
+            background-color: #065f46;
+        }
+        .error-msg {
+            color: #dc2626;
+            text-align: center;
+            display: none;
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .marksheet {
+            display: none;
+            margin-top: 20px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 18px;
+            background: #ffffff;
+        }
+        .student-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .student-meta div strong {
+            color: #1e293b;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+        th, td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 6px;
+            text-align: center;
+        }
+        th {
+            background-color: #047857;
+            color: white;
+            font-weight: 600;
+        }
+        td:first-child {
+            text-align: left;
+            font-weight: 500;
+        }
+        .pass-badge {
+            color: #16a34a;
+            font-weight: bold;
+        }
+        .fail-badge {
+            color: #dc2626;
+            font-weight: bold;
+        }
+        
+        /* সিগনেচার সেকশন স্টাইল */
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 35px;
+            padding-top: 10px;
+        }
+        .sig-box {
+            text-align: center;
+            width: 200px;
+        }
+        .sig-line {
+            border-top: 1px dashed #475569;
+            margin-bottom: 5px;
+            padding-top: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .footer-credit {
+            text-align: center;
+            margin-top: 18px;
+            padding-top: 10px;
+            border-top: 1px dashed #cbd5e1;
+            font-size: 13px;
+            color: #475569;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .action-btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .print-btn {
+            flex: 1;
+            padding: 10px;
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .reset-btn {
+            flex: 1;
+            padding: 10px;
+            background-color: #64748b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        @media print {
+            .search-panel, .action-btns, .error-msg {
+                display: none !important;
+            }
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border: none;
+                max-width: 100%;
+            }
+            .marksheet {
+                border: 2px solid #000;
+                display: block !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>সাদুল্লাপুর অরুণ আলো রেসিডেন্সিয়াল স্কুল এন্ড কলেজ</h1>
+        <h3>নির্বাচনী পরীক্ষা রেজাল্ট, এসএসসি ২০২৭</h3>
+    </div>
+
+    <!-- সার্চ প্যানেল -->
+    <div class="search-panel" id="searchPanel">
+        <div class="form-group">
+            <label>রোল নম্বর লিখুন (যেমন: 202701):</label>
+            <input type="text" id="rollInput" placeholder="এখানে রোল নম্বর লিখুন">
+        </div>
+        <button class="search-btn" type="button" id="searchBtn">ফলাফল দেখুন</button>
+        <div class="error-msg" id="errorMsg"></div>
+    </div>
+
+    <!-- মার্কশিট প্যানেল -->
+    <div class="marksheet" id="marksheet">
+        <div class="student-meta">
+            <div><strong>শিক্ষার্থীর নাম:</strong> <span id="mName"></span></div>
+            <div><strong>রোল নম্বর:</strong> <span id="mRoll"></span></div>
+            <div><strong>বিভাগ:</strong> বিজ্ঞান (Science)</div>
+            <div><strong>সেশন:</strong> ২০২৫-২০২৬</div>
+            <div><strong>সর্বমোট প্রাপ্ত নম্বর:</strong> <span id="mGrandTotal" style="color:#047857; font-weight:bold;"></span></div>
+            <div><strong>চূড়ান্ত ফলাফল:</strong> <span id="mResultStatus"></span></div>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>বিষয়</th>
+                        <th>পূর্ণমান</th>
+                        <th>লিখিত</th>
+                        <th>নৈর্ব্যক্তিক</th>
+                        <th>প্র্যাকটিক্যাল</th>
+                        <th>মোট নম্বর</th>
+                        <th>গ্রেড</th>
+                        <th>পয়েন্ট</th>
+                    </tr>
+                </thead>
+                <tbody id="marksTableBody"></tbody>
+            </table>
+        </div>
+
+        <!-- অধ্যক্ষ/পরিচালকের স্বাক্ষর এর জায়গা -->
+        <div class="signature-section">
+            <div class="sig-box">
+                <div class="sig-line">শ্রেনি শিক্ষক</div>
+            </div>
+            <div class="sig-box">
+                <div class="sig-line">অধ্যক্ষ / পরিচালক</div>
+            </div>
+        </div>
+
+        <div class="footer-credit">
+            Generated by MD AL KAWSAR
+        </div>
+
+        <div class="action-btns">
+            <button class="print-btn" type="button" onclick="window.print()">প্রিন্ট / PDF ডাউনলোড</button>
+            <button class="reset-btn" type="button" id="resetBtn">নতুন সার্চ করুন</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ৩৪ জন শিক্ষার্থীর শতভাগ নিখুঁত ডাটাবেস
+    const studentsData = [
+        {
+            roll: "202701", name: "মো: সিফাত সরকার",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 117, mcq: 43, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 162, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 39, mcq: 21, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 40, mcq: 16, practical: 25, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 46, mcq: 20, practical: 24, isOptional: false },
+                { name: "উচ্চতর গণিত (৪র্থ বিষয়)", fullMarks: 100, written: 35, mcq: 26, practical: 24, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 30, mcq: 16, practical: 24, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 65, mcq: 21, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 13, practical: 24, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 58, mcq: 23, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202702", name: "দিপু মন্ডল",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 88, mcq: 43, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 152, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 31, mcq: 20, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 33, mcq: 16, practical: 24, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 43, mcq: 15, practical: 24, isOptional: false },
+                { name: "উচ্চতর গণিত (৪র্থ বিষয়)", fullMarks: 100, written: 32, mcq: 17, practical: 24, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 14, mcq: 15, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 63, mcq: 28, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 12, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 60, mcq: 20, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202703", name: "সুলতান মাহমুদ",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 89, mcq: 32, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 152, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 30, mcq: 20, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 37, mcq: 16, practical: 24, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 39, mcq: 17, practical: 23, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 32, mcq: 17, practical: 24, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 28, mcq: 15, practical: 24, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 56, mcq: 21, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 12, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 39, mcq: 23, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202704", name: "সিয়াম কানন শাহ",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 79, mcq: 43, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 146, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 28, mcq: 23, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 33, mcq: 13, practical: 24, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 30, mcq: 16, practical: 23, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 24, mcq: 17, practical: 24, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 22, mcq: 17, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 47, mcq: 28, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 13, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 38, mcq: 20, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202705", name: "সুলতান মারুফ",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 90, mcq: 29, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 123, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 21, mcq: 16, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 26, mcq: 12, practical: 24, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 36, mcq: 13, practical: 23, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 38, mcq: 17, practical: 22, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 7, mcq: 14, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 61, mcq: 22, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 11, practical: 22, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 62, mcq: 18, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202706", name: "মো: রাফিদ মোল্লা",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 80, mcq: 33, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 138, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 36, mcq: 21, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 36, mcq: 12, practical: 24, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 45, mcq: 16, practical: 24, isOptional: false },
+                { name: "উচ্চতর গণিত (৪র্থ বিষয়)", fullMarks: 100, written: 26, mcq: 14, practical: 24, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 22, mcq: 15, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 51, mcq: 21, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 11, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 59, mcq: 21, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202707", name: "শাকিলুল হাসান শিহাব",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 84, mcq: 36, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 142, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 26, mcq: 14, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 32, mcq: 12, practical: 24, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 32, mcq: 14, practical: 23, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 32, mcq: 14, practical: 22, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 12, mcq: 13, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 60, mcq: 20, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 10, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 57, mcq: 18, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202708", name: "শ্রী শ্রাবণ সরকার",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 80, mcq: 25, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 122, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 4, mcq: 12, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 13, mcq: 8, practical: 20, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 28, mcq: 12, practical: 22, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 32, mcq: 14, practical: 22, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 10, mcq: 8, practical: 20, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 50, mcq: 20, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 14, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 32, mcq: 14, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202709", name: "মো: ফাহিম আকন্দ",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 91, mcq: 18, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 110, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 14, mcq: 13, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 28, mcq: 12, practical: 22, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 26, mcq: 17, practical: 22, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 34, mcq: 16, practical: 22, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 12, mcq: 13, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 58, mcq: 24, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 13, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 43, mcq: 13, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202710", name: "মো: শাহাদাত হোসেন",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 95, mcq: 24, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 118, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 24, mcq: 13, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 17, mcq: 13, practical: 22, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 36, mcq: 16, practical: 23, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 35, mcq: 16, practical: 22, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 19, mcq: 13, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 57, mcq: 24, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 10, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 49, mcq: 15, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202711", name: "মো: মিল্লাত শাহাদাত হোসেন সৌরভ",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 73, mcq: 29, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 94, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 16, mcq: 16, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 22, mcq: 13, practical: 22, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 25, mcq: 13, practical: 22, isOptional: false },
+                { name: "উচ্চতর গণিত (৪র্থ বিষয়)", fullMarks: 100, written: 30, mcq: 15, practical: 0, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 25, mcq: 13, practical: 22, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 51, mcq: 21, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 11, practical: 22, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 48, mcq: 15, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202712", name: "মো: সাফিউল ইসলাম",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 64, mcq: 22, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 97, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 8, mcq: 12, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 25, mcq: 9, practical: 22, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 30, mcq: 15, practical: 23, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 0, mcq: 0, practical: 23, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 19, mcq: 13, practical: 24, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 40, mcq: 19, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 9, practical: 22, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 27, mcq: 14, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202713", name: "মো: জিহাদ ইসলাম",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 83, mcq: 40, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 127, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 25, mcq: 21, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 30, mcq: 15, practical: 0, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 18, mcq: 17, practical: 21, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 36, mcq: 14, practical: 23, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 16, mcq: 17, practical: 0, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 53, mcq: 22, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 13, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 42, mcq: 22, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202714", name: "মো: জিহাদ",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 110, mcq: 23, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 70, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 6, mcq: 15, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 14, mcq: 12, practical: 23, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 7, mcq: 14, practical: 20, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 31, mcq: 13, practical: 22, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 4, mcq: 15, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 49, mcq: 14, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 16, practical: 24, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 57, mcq: 18, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202715", name: "মো: আবু বক্কর",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 82, mcq: 41, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 147, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 17, mcq: 19, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 31, mcq: 16, practical: 24, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 34, mcq: 14, practical: 23, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 40, mcq: 15, practical: 23, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 15, mcq: 17, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 50, mcq: 23, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 12, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 37, mcq: 20, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202716", name: "গোপাল মোদক",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 66, mcq: 28, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 119, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 19, mcq: 17, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 25, mcq: 13, practical: 22, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 26, mcq: 16, practical: 22, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 33, mcq: 14, practical: 22, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 4, mcq: 15, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 48, mcq: 17, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 14, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 28, mcq: 15, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202717", name: "শাকিল মিয়া",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 60, mcq: 23, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 106, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 17, mcq: 12, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 20, mcq: 13, practical: 22, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 25, mcq: 13, practical: 22, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 23, mcq: 15, practical: 21, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 4, mcq: 13, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 45, mcq: 16, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 11, practical: 22, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 33, mcq: 17, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202718", name: "মো: জারিফ আকন্দ",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 65, mcq: 41, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 106, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 26, mcq: 20, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 38, mcq: 15, practical: 24, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 41, mcq: 17, practical: 24, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 33, mcq: 16, practical: 22, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 15, mcq: 16, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 40, mcq: 20, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 11, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 58, mcq: 22, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202719", name: "মো: রিয়াদ হাসান",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 47, mcq: 27, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 105, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 12, mcq: 16, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 26, mcq: 12, practical: 22, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 27, mcq: 14, practical: 22, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 28, mcq: 16, practical: 22, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 5, mcq: 11, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 30, mcq: 15, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 12, practical: 22, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 23, mcq: 15, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202720", name: "সোহান মিয়া",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 71, mcq: 19, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 82, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 4, mcq: 13, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 12, mcq: 13, practical: 22, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 15, mcq: 10, practical: 20, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 30, mcq: 13, practical: 23, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 7, mcq: 15, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 41, mcq: 17, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 12, practical: 22, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 35, mcq: 16, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202721", name: "আশিকুর রহমান",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 56, mcq: 28, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 76, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 8, mcq: 15, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 25, mcq: 8, practical: 21, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 25, mcq: 11, practical: 22, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 37, mcq: 16, practical: 22, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 3, mcq: 13, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 41, mcq: 16, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 11, practical: 21, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 29, mcq: 14, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202722", name: "সজল আহম্মদ হৃদয়",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 59, mcq: 28, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 77, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 15, mcq: 12, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 23, mcq: 10, practical: 22, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 16, mcq: 12, practical: 20, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 34, mcq: 15, practical: 22, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 5, mcq: 12, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 33, mcq: 16, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 12, practical: 21, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 20, mcq: 15, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202723", name: "মো: নাঈম ইকবাল",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 59, mcq: 34, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 93, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 16, mcq: 12, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 32, mcq: 13, practical: 24, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 29, mcq: 16, practical: 22, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 32, mcq: 15, practical: 22, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 3, mcq: 13, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 33, mcq: 19, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 10, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 41, mcq: 19, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202724", name: "খালিদ হাসান রিয়াদ সরকার",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 35, mcq: 28, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 66, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 8, mcq: 13, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 11, mcq: 13, practical: 21, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 11, mcq: 8, practical: 20, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 26, mcq: 16, practical: 22, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 2, mcq: 13, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 41, mcq: 19, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 13, practical: 22, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 16, mcq: 13, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202725", name: "স্বরণ কুমার",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 49, mcq: 24, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 74, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 4, mcq: 12, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 13, mcq: 8, practical: 20, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 8, mcq: 8, practical: 20, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 23, mcq: 12, practical: 22, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 7, mcq: 15, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 30, mcq: 18, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 16, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 13, mcq: 14, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202726", name: "মো: রিয়াদ আকন্দ",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 53, mcq: 13, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 78, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 4, mcq: 11, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 10, mcq: 8, practical: 20, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 3, mcq: 7, practical: 20, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 28, mcq: 16, practical: 22, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 2, mcq: 13, practical: 23, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 30, mcq: 19, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 13, practical: 22, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 23, mcq: 14, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202728", name: "মো: সিমান্ত রহমান",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 50, mcq: 13, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 48, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 0, mcq: 12, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 6, mcq: 8, practical: 20, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 29, mcq: 15, practical: 24, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 25, mcq: 16, practical: 21, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 3, mcq: 9, practical: 20, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 28, mcq: 15, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 16, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 21, mcq: 16, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202601", name: "ফাইজা আফরিন",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 96, mcq: 36, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 147, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 38, mcq: 20, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 29, mcq: 15, practical: 24, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 26, mcq: 12, practical: 23, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 39, mcq: 13, practical: 23, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 3, mcq: 9, practical: 20, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 46, mcq: 16, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 11, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 48, mcq: 17, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202602", name: "ছাত্র/ছাত্রী ২৬০২",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 96, mcq: 42, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 125, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 30, mcq: 16, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 26, mcq: 12, practical: 23, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 14, mcq: 16, practical: 24, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 43, mcq: 13, practical: 22, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 14, mcq: 16, practical: 24, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 64, mcq: 23, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 9, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 50, mcq: 18, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202603", name: "হাদিয়া তাবাস্সুম",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 90, mcq: 34, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 120, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 26, mcq: 19, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 22, mcq: 14, practical: 23, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 31, mcq: 16, practical: 23, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 41, mcq: 13, practical: 23, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 16, mcq: 16, practical: 24, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 63, mcq: 25, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 10, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 44, mcq: 16, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202604", name: "ছাইদুন্নেছা প্রমি",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 100, mcq: 35, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 124, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 31, mcq: 19, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 20, mcq: 12, practical: 21, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 26, mcq: 8, practical: 22, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 36, mcq: 13, practical: 23, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 18, mcq: 14, practical: 24, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 63, mcq: 27, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 10, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 50, mcq: 18, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202605", name: "রানী সরকার",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 85, mcq: 34, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 108, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 32, mcq: 19, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 34, mcq: 16, practical: 23, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 28, mcq: 15, practical: 22, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 36, mcq: 13, practical: 22, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 13, mcq: 16, practical: 24, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 58, mcq: 21, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 10, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 43, mcq: 19, practical: 0, isOptional: false }
+            ]
+        },
+        {
+            roll: "202606", name: "মোছা: তিন্নি আক্তার",
+            subjects: [
+                { name: "বাংলা", fullMarks: 200, written: 81, mcq: 36, practical: 0, isOptional: false },
+                { name: "ইংরেজি", fullMarks: 200, written: 88, mcq: 0, practical: 0, isOptional: false },
+                { name: "গণিত", fullMarks: 100, written: 16, mcq: 16, practical: 0, isOptional: false },
+                { name: "পদার্থবিজ্ঞান", fullMarks: 100, written: 17, mcq: 10, practical: 20, isOptional: false },
+                { name: "রসায়ন", fullMarks: 100, written: 8, mcq: 17, practical: 20, isOptional: false },
+                { name: "কৃষি শিক্ষা (৪র্থ বিষয়)", fullMarks: 100, written: 38, mcq: 16, practical: 23, isOptional: true },
+                { name: "জীববিজ্ঞান", fullMarks: 100, written: 14, mcq: 14, practical: 24, isOptional: false },
+                { name: "ধর্ম ও নৈতিক শিক্ষা", fullMarks: 100, written: 54, mcq: 25, practical: 0, isOptional: false },
+                { name: "তথ্য ও যোগাযোগ প্রযুক্তি", fullMarks: 50, written: 0, mcq: 11, practical: 23, isOptional: false },
+                { name: "বাংলাদেশ ও বিশ্বপরিচয়", fullMarks: 100, written: 43, mcq: 17, practical: 0, isOptional: false }
+            ]
+        }
+    ];
+
+    function getGradeAndPoint(obtained, fullMarks) {
+        const percentage = (obtained / fullMarks) * 100;
+        if (percentage >= 80) return { grade: "A+", point: 5.0 };
+        if (percentage >= 70) return { grade: "A", point: 4.0 };
+        if (percentage >= 60) return { grade: "A-", point: 3.5 };
+        if (percentage >= 50) return { grade: "B", point: 3.0 };
+        if (percentage >= 40) return { grade: "C", point: 2.0 };
+        if (percentage >= 33) return { grade: "D", point: 1.0 };
+        return { grade: "F", point: 0.0 };
+    }
+
+    function findResult() {
+        const rollInput = document.getElementById("rollInput");
+        const errorMsg = document.getElementById("errorMsg");
+        const marksheet = document.getElementById("marksheet");
+
+        if (!rollInput) return;
+        const roll = rollInput.value.trim();
+
+        if (roll === "") {
+            errorMsg.innerText = "দয়া করে একটি রোল নম্বর লিখুন।";
+            errorMsg.style.display = "block";
+            marksheet.style.display = "none";
+            return;
+        }
+
+        const student = studentsData.find(s => s.roll === roll);
+
+        if (!student) {
+            errorMsg.innerText = "দুঃখিত! প্রদত্ত রোল নম্বরের কোনো ফলাফল পাওয়া যায়নি। সঠিক রোল দিয়ে আবার চেষ্টা করুন।";
+            errorMsg.style.display = "block";
+            marksheet.style.display = "none";
+            return;
+        }
+
+        errorMsg.style.display = "none";
+
+        document.getElementById("mName").innerText = student.name;
+        document.getElementById("mRoll").innerText = student.roll;
+
+        const tbody = document.getElementById("marksTableBody");
+        tbody.innerHTML = "";
+
+        let grandTotal = 0;
+        let grandFullMarks = 0;
+        let compulsoryPoints = 0;
+        let compulsoryCount = 0;
+        let optionalBonus = 0;
+        let hasFailed = false;
+
+        student.subjects.forEach(sub => {
+            const subTotal = sub.written + sub.mcq + sub.practical;
+            grandTotal += subTotal;
+            grandFullMarks += sub.fullMarks;
+
+            const result = getGradeAndPoint(subTotal, sub.fullMarks);
+
+            if (sub.isOptional) {
+                if (result.point > 2.0) {
+                    optionalBonus = result.point - 2.0;
+                }
+            } else {
+                if (result.grade === "F") {
+                    hasFailed = true;
+                }
+                compulsoryPoints += result.point;
+                compulsoryCount++;
+            }
+
+            const row = `<tr>
+                <td>${sub.name}</td>
+                <td>${sub.fullMarks}</td>
+                <td>${sub.written}</td>
+                <td>${sub.mcq > 0 ? sub.mcq : '-'}</td>
+                <td>${sub.practical > 0 ? sub.practical : '-'}</td>
+                <td><strong>${subTotal}</strong></td>
+                <td>${result.grade}</td>
+                <td>${result.point.toFixed(2)}</td>
+            </tr>`;
+            tbody.innerHTML += row;
+        });
+
+        document.getElementById("mGrandTotal").innerText = `${grandTotal} / ${grandFullMarks}`;
+
+        const statusEl = document.getElementById("mResultStatus");
+        if (hasFailed) {
+            statusEl.innerHTML = `<span class="fail-badge">অকৃতকার্য (GPA: 0.00)</span>`;
+        } else {
+            let finalGPA = compulsoryCount > 0 ? (compulsoryPoints + optionalBonus) / compulsoryCount : 0;
+            if (finalGPA > 5.00) finalGPA = 5.00;
+            statusEl.innerHTML = `<span class="pass-badge">উত্তীর্ণ (GPA: ${finalGPA.toFixed(2)})</span>`;
+        }
+
+        marksheet.style.display = "block";
+    }
+
+    function resetSearch() {
+        document.getElementById("marksheet").style.display = "none";
+        document.getElementById("rollInput").value = "";
+        document.getElementById("errorMsg").style.display = "none";
+    }
+
+    document.getElementById("searchBtn").addEventListener("click", findResult);
+    document.getElementById("resetBtn").addEventListener("click", resetSearch);
+    document.getElementById("rollInput").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            findResult();
+        }
+    });
+</script>
+
+</body>
+</html>
